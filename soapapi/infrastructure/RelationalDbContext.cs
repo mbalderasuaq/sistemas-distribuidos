@@ -10,4 +10,6 @@ public class RelationalDbContext : DbContext
     }
 
     public DbSet<UserEntity> Users { get; set; } = null!;
+
+    public DbSet<BookEntity> Books { get; set; } = null!;
 }
