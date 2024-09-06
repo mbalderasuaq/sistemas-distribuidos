@@ -28,7 +28,7 @@ public static class UserMapper
             BirthDate = user.BirthDate
         };
     }
-  
+
     public static IEnumerable<UserResponseDto> ToDto(this IEnumerable<UserModel> users)
     {
         return users.Select(user => user.ToDto()).ToList();
