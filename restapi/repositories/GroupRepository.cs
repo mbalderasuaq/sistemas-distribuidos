@@ -23,8 +23,7 @@ public class GroupRepository : IGroupRepository
             var filter = Builders<GroupEntity>.Filter.Eq(group => group.Id, id);
             var group = await _groups.Find(filter).FirstOrDefaultAsync(cancellationToken);
             return group.ToModel();
-        }
-        catch (FormatException)
+        } catch (FormatException)
         {
             return null;
         }
