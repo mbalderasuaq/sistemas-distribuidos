@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using RestApi.Infrastructure.Mongo;
 using RestApi.Mappers;
@@ -22,9 +23,17 @@ public class GroupRepository : IGroupRepository
             var filter = Builders<GroupEntity>.Filter.Eq(group => group.Id, id);
             var group = await _groups.Find(filter).FirstOrDefaultAsync(cancellationToken);
             return group.ToModel();
-        } catch(FormatException)
+        }
+        catch (FormatException)
         {
             return null;
         }
+    }
+
+    public async Task<IList<GroupModel>> GetAllByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        var filter = Builders<GroupEntity>.Filter.Regex(group => group.Name, new BsonRegularExpression(name, "i"));
+        var groups = await _groups.Find(filter).ToListAsync(cancellationToken);
+        return groups.Select(group => group.ToModel()).ToList();
     }
 }
