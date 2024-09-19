@@ -29,7 +29,6 @@ public class GroupsController : ControllerBase
 
         return Ok(group.ToDto());
     }
-
     // GET /groups?name={name}
     [HttpGet]
     public async Task<ActionResult<IList<GroupResponse>>> GetAllByName([FromQuery] string name, CancellationToken cancellationToken)
