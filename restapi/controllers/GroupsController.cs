@@ -31,9 +31,9 @@ public class GroupsController : ControllerBase
     }
     // GET /groups?name={name}?pageNumber={pageNumber}&pageSize={pageSize}
     [HttpGet]
-    public async Task<ActionResult<IList<GroupResponse>>> GetAllByName([FromQuery] string name, [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
+    public async Task<ActionResult<IList<GroupResponse>>> GetAllByName([FromQuery] string name, [FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string orderBy, CancellationToken cancellationToken)
     {
-        var groups = await _groupService.GetAllByNameAsync(name, pageNumber, pageSize, cancellationToken);
+        var groups = await _groupService.GetAllByNameAsync(name, pageNumber, pageSize, orderBy, cancellationToken);
 
         return Ok(groups.Select(group => group.ToDto()).ToList());
     }

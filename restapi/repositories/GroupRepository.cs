@@ -24,16 +24,22 @@ public class GroupRepository : IGroupRepository
             var group = await _groups.Find(filter).FirstOrDefaultAsync(cancellationToken);
             return group.ToModel();
 
-        } catch (FormatException)
+        }
+        catch (FormatException)
         {
             return null;
         }
     }
 
-    public async Task<IList<GroupModel>> GetAllByNameAsync(string name, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<IList<GroupModel>> GetAllByNameAsync(string name, int pageNumber, int pageSize, string orderBy, CancellationToken cancellationToken)
     {
         var filter = Builders<GroupEntity>.Filter.Regex(group => group.Name, new BsonRegularExpression(name, "i"));
-        var groups = await _groups.Find(filter).Skip(pageSize * (pageNumber - 1)).Limit(pageSize).ToListAsync(cancellationToken);
+        var sort = Builders<GroupEntity>.Sort.Ascending(group => group.Name);
+        if (orderBy == "creationDate")
+        {
+            sort = Builders<GroupEntity>.Sort.Ascending(group => group.CreatedAt);
+        }
+        var groups = await _groups.Find(filter).Skip(pageSize * (pageNumber - 1)).Limit(pageSize).Sort(sort).ToListAsync(cancellationToken);
         return groups.Select(group => group.ToModel()).ToList();
     }
 }

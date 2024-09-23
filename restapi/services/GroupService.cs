@@ -31,9 +31,9 @@ public class GroupService : IGroupService
         };
     }
     
-    public async Task<IList<GroupUserModel>> GetAllByNameAsync(string name, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<IList<GroupUserModel>> GetAllByNameAsync(string name, int pageNumber, int pageSize, string orderBy, CancellationToken cancellationToken)
     {
-        var groups = await _groupRepository.GetAllByNameAsync(name, pageNumber, pageSize, cancellationToken);
+        var groups = await _groupRepository.GetAllByNameAsync(name, pageNumber, pageSize, orderBy, cancellationToken);
 
         var groupUserModels = await Task.WhenAll(groups.Select(async group => new GroupUserModel{
             Id = group.Id,
