@@ -6,5 +6,5 @@ public interface IGroupService
 {
     Task<GroupUserModel> GetGroupByIdAsync(string id, CancellationToken cancellationToken);
     
-    Task<IList<GroupUserModel>> GetAllByNameAsync(string name, CancellationToken cancellationToken);
+    Task<IList<GroupUserModel>> GetAllByNameAsync(string name, int pageNumber, int pageSize, CancellationToken cancellationToken);
 }

@@ -29,11 +29,11 @@ public class GroupsController : ControllerBase
 
         return Ok(group.ToDto());
     }
-    // GET /groups?name={name}
+    // GET /groups?name={name}?pageNumber={pageNumber}&pageSize={pageSize}
     [HttpGet]
-    public async Task<ActionResult<IList<GroupResponse>>> GetAllByName([FromQuery] string name, CancellationToken cancellationToken)
+    public async Task<ActionResult<IList<GroupResponse>>> GetAllByName([FromQuery] string name, [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
     {
-        var groups = await _groupService.GetAllByNameAsync(name, cancellationToken);
+        var groups = await _groupService.GetAllByNameAsync(name, pageNumber, pageSize, cancellationToken);
 
         return Ok(groups.Select(group => group.ToDto()).ToList());
     }

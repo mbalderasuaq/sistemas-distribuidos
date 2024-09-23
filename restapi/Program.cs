@@ -12,6 +12,7 @@ builder.Services.AddSingleton<IMongoClient, MongoClient>(s => new MongoClient(bu
 // Scoped, Transient, Singleton -> Dependency Injection 
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

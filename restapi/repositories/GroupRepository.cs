@@ -30,10 +30,10 @@ public class GroupRepository : IGroupRepository
         }
     }
 
-    public async Task<IList<GroupModel>> GetAllByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<IList<GroupModel>> GetAllByNameAsync(string name, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         var filter = Builders<GroupEntity>.Filter.Regex(group => group.Name, new BsonRegularExpression(name, "i"));
-        var groups = await _groups.Find(filter).ToListAsync(cancellationToken);
+        var groups = await _groups.Find(filter).Skip(pageSize * (pageNumber - 1)).Limit(pageSize).ToListAsync(cancellationToken);
         return groups.Select(group => group.ToModel()).ToList();
     }
 }
