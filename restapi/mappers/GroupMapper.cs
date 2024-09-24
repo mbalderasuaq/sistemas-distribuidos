@@ -12,13 +12,14 @@ public static class GroupMapper
         {
             Id = group.Id,
             Name = group.Name,
-            CreationDate = group.CreationDate
+            CreationDate = group.CreationDate,
+            Users = group.Users.ToDto()
         };
     }
 
     public static GroupModel ToModel(this GroupEntity group)
     {
-        if(group == null)
+        if (group == null)
         {
             return null;
         }
