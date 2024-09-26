@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using RestApi.Dtos;
 using RestApi.Services;
 using RestApi.Mappers;
+using RestApi.Exceptions;
+using System.Net;
 
 namespace RestApi.Controllers;
 
@@ -36,5 +38,20 @@ public class GroupsController : ControllerBase
         var groups = await _groupService.GetAllByNameAsync(name, pageNumber, pageSize, orderBy, cancellationToken);
 
         return Ok(groups.Select(group => group.ToDto()).ToList());
+    }
+
+    // DELETE /groups/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteGroup(string id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _groupService.DeleteGroupByIdAsync(id, cancellationToken);
+            return NoContent();
+        }
+        catch (GroupNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

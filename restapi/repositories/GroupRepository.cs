@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using RestApi.Infrastructure.Mongo;
@@ -41,5 +42,12 @@ public class GroupRepository : IGroupRepository
         }
         var groups = await _groups.Find(filter).Skip(pageSize * (pageNumber - 1)).Limit(pageSize).Sort(sort).ToListAsync(cancellationToken);
         return groups.Select(group => group.ToModel()).ToList();
+    }
+
+    public async Task DeleteByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        var filter = Builders<GroupEntity>.Filter.Eq(group => group.Id, id);
+
+        await _groups.DeleteOneAsync(filter, cancellationToken);
     }
 }
