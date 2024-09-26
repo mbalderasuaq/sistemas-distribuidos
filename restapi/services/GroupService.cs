@@ -1,3 +1,4 @@
+using RestApi.Exceptions;
 using RestApi.Models;
 using RestApi.Repositories;
 
@@ -43,5 +44,41 @@ public class GroupService : IGroupService
         }));
 
         return groupUserModels.ToList();
+    }
+
+    public async Task DeleteGroupByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        var group = await _groupRepository.GetByIdAsync(id, cancellationToken);
+
+        if(group is null)
+        {
+            throw new GroupNotFoundException();
+        }
+
+        await _groupRepository.DeleteByIdAsync(id, cancellationToken);
+    }
+
+    public async Task<GroupUserModel> CreateGroupAsync(string name, Guid[] users, CancellationToken cancellationToken)
+    {
+        if(users.Length == 0)
+        {
+            throw new InvalidGroupRequestFormatException();
+        }
+
+        var group = await _groupRepository.GetByNameAsync(name, cancellationToken);
+
+        if(group != null)
+        {
+            throw new GroupAlreadyExistsException();
+        }
+
+        var newGroup = await _groupRepository.CreateAsync(name, users, cancellationToken);
+
+        return new GroupUserModel{
+            Id = newGroup.Id,
+            Name = newGroup.Name,
+            CreationDate = newGroup.CreatedAt,
+            Users = (await Task.WhenAll(newGroup.Users.Select(async user => await _userRepository.GetByIdAsync(user, cancellationToken)))).ToList()
+        };
     }
 }
