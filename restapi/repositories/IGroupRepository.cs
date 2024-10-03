@@ -13,4 +13,6 @@ public interface IGroupRepository
     Task DeleteByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<GroupModel> CreateAsync(string name, Guid[] users, CancellationToken cancellationToken);
+
+    Task UpdateAsync(string id, string name, Guid[] users, CancellationToken cancellationToken);
 }
