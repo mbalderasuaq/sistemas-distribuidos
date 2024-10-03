@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -77,5 +78,15 @@ public class GroupRepository : IGroupRepository
 
         await _groups.InsertOneAsync(group, new InsertOneOptions(), cancellationToken);
         return group.ToModel();
+    }
+
+    public async Task UpdateAsync(string id, string name, Guid[] users, CancellationToken cancellationToken)
+    {
+        var filter = Builders<GroupEntity>.Filter.Eq(group => group.Id, id);
+        var update = Builders<GroupEntity>.Update
+            .Set(group => group.Name, name)
+            .Set(group => group.Users, users);
+
+        await _groups.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
     }
 }
