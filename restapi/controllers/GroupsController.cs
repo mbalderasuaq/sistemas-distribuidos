@@ -66,7 +66,39 @@ public class GroupsController : ControllerBase
         catch (InvalidGroupRequestFormatException)
         {
             return BadRequest(NewValidationProblemDetails("One or more validation errors ocurred", HttpStatusCode.BadRequest, new Dictionary<string, string[]>{
+                {"Groups", ["Users array is empty", "Users array is not valid"]}
+            }));
+        }
+        catch (GroupAlreadyExistsException)
+        {
+            return Conflict(NewValidationProblemDetails("One or more validation errors ocurred", HttpStatusCode.Conflict, new Dictionary<string, string[]>{
+                {"Groups", ["Group with same name already exists"]}
+            }));
+        }
+    }
+
+    // PUT /groups/{id} 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateGroup(string id, [FromBody] UpdateGroupRequest groupRequest, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _groupService.UpdateGroupAsync(id, groupRequest.Name, groupRequest.Users, cancellationToken);
+            return NoContent();
+        } catch(GroupNotFoundException)
+        {
+            return NotFound();
+        } 
+        catch (InvalidGroupRequestFormatException)
+        {
+            return BadRequest(NewValidationProblemDetails("One or more validation errors ocurred", HttpStatusCode.BadRequest, new Dictionary<string, string[]>{
                 {"Groups", ["Users array is empty"]}
+            }));
+        }
+        catch (InvalidGroupUsersRequestException)
+        {
+            return BadRequest(NewValidationProblemDetails("One or more validation errors ocurred", HttpStatusCode.BadRequest, new Dictionary<string, string[]>{
+                {"Groups", ["One or more users do not exist"]}
             }));
         }
         catch (GroupAlreadyExistsException)
