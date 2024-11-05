@@ -108,7 +108,6 @@ public class GroupsController : ControllerBase
             }));
         }
     }
-    
 
     private static ValidationProblemDetails NewValidationProblemDetails(string title, HttpStatusCode statusCode, Dictionary<string, string[]> errors)
     {
