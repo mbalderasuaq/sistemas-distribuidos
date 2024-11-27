@@ -4,10 +4,12 @@ using RestApi.Services;
 using RestApi.Mappers;
 using RestApi.Exceptions;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RestApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class GroupsController : ControllerBase
 {
@@ -108,6 +110,7 @@ public class GroupsController : ControllerBase
             }));
         }
     }
+    
 
     private static ValidationProblemDetails NewValidationProblemDetails(string title, HttpStatusCode statusCode, Dictionary<string, string[]> errors)
     {
